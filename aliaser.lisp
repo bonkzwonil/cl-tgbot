@@ -41,11 +41,14 @@
 (redis:connect)
 (red:ping)
 
+(defun redis-key (key)
+  (concatenate 'string "aliaser:" key))
+
 (defun store (key value)
-  (red:set key value))
+  (red:set (redis-key key) value))
 
 (defun restore (key)
-  (red:get key))
+  (red:get (redis-key key)))
 
 (save "hallo welt" "bla")
-(lookup "hw")
+(lookup "hw" "bla")
