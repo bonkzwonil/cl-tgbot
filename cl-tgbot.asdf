@@ -11,6 +11,7 @@
 			:cl-json
 			:cl-redis
 			:cl-ppcre)
+	   :components
 	   ((:file "tg")
 	    (:file "aliaser")
 	    (:file "bot" :depends-on ("tg" "aliaser"))))
