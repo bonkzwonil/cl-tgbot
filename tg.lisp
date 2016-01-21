@@ -54,7 +54,7 @@
 
 
 (defmacro call-api (name &optional parameters content &body body)
-  `(cl-json:decode-json (drakma:http-request :read-timeout 6000  (build-url ,name ,parameters) :method ,(if content :post :get) :content-type (if ,content "application/json" nil) :want-stream T :content ,content
+  `(cl-json:decode-json (drakma:http-request (build-url ,name ,parameters) :connection-timeout 6000 :method ,(if content :post :get) :content-type (if ,content "application/json" nil) :want-stream T :content ,content
 			 ,@body)))
 
 
