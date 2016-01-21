@@ -14,6 +14,9 @@
 
 
 ; Our little minilanguage for defining api
+(defmacro call-api (name &optional parameters content &body body)
+  `(cl-json:decode-json (drakma:http-request (build-url ,name ,parameters) :connection-timeout 6000 :method ,(if content :post :get) :content-type (if ,content "application/json" nil) :want-stream T :content ,content
+			 ,@body)))
 (defmacro defapi (call (json) &body body)
   `(defun ,call (&key parameters jsonbody)
      (let ((,json (call-api (cl-json:lisp-to-camel-case (symbol-name ',call)) parameters jsonbody)))
@@ -53,9 +56,6 @@
 	url)))
 
 
-(defmacro call-api (name &optional parameters content &body body)
-  `(cl-json:decode-json (drakma:http-request (build-url ,name ,parameters) :connection-timeout 6000 :method ,(if content :post :get) :content-type (if ,content "application/json" nil) :want-stream T :content ,content
-			 ,@body)))
 
 
 

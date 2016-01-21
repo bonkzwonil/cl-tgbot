@@ -16,7 +16,7 @@
 	  words)))
   
 (defun save (text &optional section)
-  (let ((alias (build (cl-ppcre:split " " text))))
+  (let ((alias (build (remove-if #'(lambda (x) (= 0 (length x))) (cl-ppcre:split " " text)))))
     (store (if section (concatenate 'string section ":" alias) alias) text)))
 
 
