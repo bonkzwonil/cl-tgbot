@@ -6,7 +6,11 @@
 	   :name "cl-tgbot"
 	   :maintainer "Mathias Menzel-Nielsen <mathias@menzel-nielsen.de>"
 	   :description "Telegram Bot in Common Lisp"
-	   :components
+	   :depends-on (:hunchentoot
+			:drakma
+			:cl-json
+			:cl-redis
+			:cl-ppcre)
 	   ((:file "tg")
 	    (:file "aliaser")
 	    (:file "bot" :depends-on ("tg" "aliaser"))))
