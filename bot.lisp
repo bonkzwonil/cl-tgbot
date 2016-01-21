@@ -120,14 +120,14 @@
 (defun poll ()
   (handle-updates (get-updates :parameters `( ("offset" . ,*last-update-id*)))))
 
-(handle-updates *res*)
+;; (handle-updates *res*)
 
-(trace aliaser::save)
-(trace aliaser::lookup)
-(trace handle-text)
-(trace handle-update)
-(trace handle-alias)
-(trace build-url)
-(trace send-message)
-(disassemble #'hunchentoot:start)
+;; (trace aliaser::save)
+;; (trace aliaser::lookup)
+;; (trace handle-text)
+;; (trace handle-update)
+;; (trace handle-alias)
+;; (trace build-url)
+;; (trace send-message)
+;; (disassemble #'hunchentoot:start)
 
