@@ -42,7 +42,7 @@
 (red:ping)
 
 (defun redis-key (key)
-  (concatenate 'string "aliaser:" key))
+  (concatenate 'string "aliaser:" (string-downcase key)))
 
 (defun store (key value)
   (red:set (redis-key key) value))
