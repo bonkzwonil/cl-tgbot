@@ -7,7 +7,7 @@
 (defparameter *token* (read-line (open #p"token.txt")))  ;; Provide just your token in token.txt
 
 (defun handle-alias (alias chat-id)
-  (let ((text (aliaser::lookup alias chat-id)))
+  (let ((text (aliaser::lookup alias (format nil "~a" chat-id))))
     (when text
       (send-message-via-api chat-id text))))
 
@@ -15,7 +15,7 @@
   (let* ((text (asva :text (asva :message update)))
 	 (chat-id (asva :id (asva :chat (asva :message update))))
 	 (n-words (count-words text)))
-    (cond ((> n-words 2) (aliaser::save text chat-id))
+    (cond ((> n-words 2) (aliaser::save text (format nil "~a" chat-id)))
 	  ((= n-words 1) (handle-alias text chat-id)))))
 
 
@@ -30,14 +30,14 @@
 
 
 
-(handle-updates *res*)
+;; (handle-updates *res*)
 
-(trace aliaser::save)
-(trace aliaser::lookup)
-(trace handle-text)
-(trace handle-update)
-(trace handle-alias)
-(trace build-url)
-(trace send-message)
-(disassemble #'hunchentoot:start)
+;; (trace aliaser::save)
+;; (trace aliaser::lookup)
+;; (trace handle-text)
+;; (trace handle-update)
+;; (trace handle-alias)
+;; (trace build-url)
+;; (trace send-message)
+;; (disassemble #'hunchentoot:start)
 

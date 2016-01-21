@@ -26,14 +26,14 @@
 
 
 
-;; Dummy Store
-(defparameter *storage* (make-hash-table :test 'equalp))
+;; ;; Dummy Store
+;; (defparameter *storage* (make-hash-table :test 'equalp))
 
-(defun store (key value)
-  (setf (gethash key *storage*) value))
+;; (defun store (key value)
+;;   (setf (gethash key *storage*) value))
 
-(defun restore (key)
-  (gethash key *storage*))
+;; (defun restore (key)
+;;   (gethash key *storage*))
 
 
 ;; redis storage
