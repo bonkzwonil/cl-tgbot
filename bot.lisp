@@ -12,8 +12,8 @@
       (send-message-via-api chat-id text))))
 
 (defun handle-update (update)
-  (let* ((text (asva :text (asva :message update)))
-	 (chat-id (asva :id (asva :chat (asva :message update))))
+  (let* ((text (hashpath '("message" "text") update))
+	 (chat-id (hashpath '("message" "chat" "id") update))
 	 (n-words (count-words text)))
     (cond ((> n-words 2) (aliaser::save text (format nil "~a" chat-id)))
 	  ((= n-words 1) (handle-alias text chat-id)))))

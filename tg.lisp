@@ -8,15 +8,15 @@
 
 (defparameter *last-update-id* 0)
 
-(require 'cl-json)
-(require 'drakma)
 
-
+(setf drakma::*drakma-default-external-format* 'utf-8)
+(setf yason::*parse-object-as* :hash-table)
 
 ; Our little minilanguage for defining api
 (defmacro call-api (name &optional parameters content &body body)
-  `(cl-json:decode-json (drakma:http-request (build-url ,name ,parameters) :connection-timeout 6000 :method ,(if content :post :get) :content-type (if ,content "application/json" nil) :want-stream T :content ,content
-			 ,@body)))
+  `(yason:parse (drakma:http-request (build-url ,name ,parameters) :connection-timeout 6000 :method ,(if content :post :get) :content-type (if ,content "application/json" nil) :want-stream T :content ,content
+				     ,@body)))
+
 (defmacro defapi (call (json) &body body)
   `(defun ,call (&key parameters jsonbody)
      (let ((,json (call-api (cl-json:lisp-to-camel-case (symbol-name ',call)) parameters jsonbody)))
@@ -57,13 +57,19 @@
 
 
 
-
-
-
 (defun send-message-via-api (chat-id text)
-  (format t "Sending ~a to ~a" text chat-id)
-  (send-message :jsonbody (cl-json:encode-json-to-string  `(("chat_id" . ,chat-id)
-							    ("text" . ,text)))))
+  (format t "Sending ~a to ~a~%" text chat-id)
+  (send-message :jsonbody (format nil "{\"chat_id\": ~a, \"text\": ~a}" chat-id text)))
+
+
+
+(defun hashpath (path hash-table)
+  "gets a path in hashtable: eg: '(A B) gets the A key in hash-table and then the B key"
+  (loop for key in path
+       with value = hash-table
+       finally (return value)
+     do
+       (setf value (gethash key value))))
 
 (defmacro asva (item place)
   "assoc value"
@@ -73,6 +79,9 @@
   (1+ (count-if #'(lambda (x) (char= x #\Space)) text)))
 
 (defun handle-updates (updates handler)
-  (let ((new-id (asva :update--id (car (last (asva :result updates))))))
+  (let ((new-id (gethash "update-id" (car (last (gethash "result" updates))))))
     (when new-id (setf *last-update-id* (1+ new-id)))
-    (mapcar handler (asva :result updates))))
+    (mapcar handler (gethash "result" updates))))
+
+
+

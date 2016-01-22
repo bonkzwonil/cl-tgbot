@@ -1,6 +1,5 @@
 					; The Aliaser Module
 
-(require :cl-ppcre)
 
 (defpackage :aliaser 
   (:use :cl))
@@ -50,5 +49,5 @@
 (defun restore (key)
   (red:get (redis-key key)))
 
-(save "hallo welt" "bla")
+(save "hallo welt👀🌵 " "bla")
 (lookup "hw" "bla")

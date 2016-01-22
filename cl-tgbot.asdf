@@ -9,6 +9,7 @@
 	   :depends-on (:hunchentoot
 			:drakma
 			:cl-json
+			:yason
 			:cl-redis
 			:cl-ppcre)
 	   :components
