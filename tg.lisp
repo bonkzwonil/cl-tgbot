@@ -14,7 +14,7 @@
 
 ; Our little minilanguage for defining api
 (defmacro call-api (name &optional parameters content &body body)
-  `(yason:parse (drakma:http-request (build-url ,name ,parameters) :connection-timeout 6000 :method ,(if content :post :get) :content-type (if ,content "application/json" nil) :want-stream T :content ,content
+  `(yason:parse (drakma:http-request (build-url ,name ,parameters) :connection-timeout 1600 :method ,(if content :post :get) :content-type (if ,content "application/json" nil) :want-stream T :content ,content
 				     ,@body)))
 
 (defmacro defapi (call (json) &body body)
@@ -59,7 +59,7 @@
 
 (defun send-message-via-api (chat-id text)
   (format t "Sending ~a to ~a~%" text chat-id)
-  (send-message :jsonbody (format nil "{\"chat_id\": ~a, \"text\": ~a}" chat-id text)))
+  (send-message :jsonbody (format nil "{\"chat_id\": ~a, \"text\": \"~a\"}" chat-id text)))
 
 
 
@@ -79,9 +79,10 @@
   (1+ (count-if #'(lambda (x) (char= x #\Space)) text)))
 
 (defun handle-updates (updates handler)
-  (let ((new-id (gethash "update-id" (car (last (gethash "result" updates))))))
-    (when new-id (setf *last-update-id* (1+ new-id)))
-    (mapcar handler (gethash "result" updates))))
+  (when (gethash "result" updates)
+    (let ((new-id (gethash "update_id" (car (last (gethash "result" updates))))))
+      (when new-id (setf *last-update-id* (1+ new-id)))
+      (mapcar handler (gethash "result" updates)))))
 
 
 

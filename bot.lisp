@@ -21,7 +21,7 @@
 
 
 (defun poll ()
-  (handle-updates (get-updates :parameters `( ("offset" . ,*last-update-id*) ("timeout" . 590))) #'handle-update))
+  (handle-updates (get-updates :parameters `( ("limit" . 5) ("offset" . ,*last-update-id*) ("timeout" . 1590))) #'handle-update))
 
 
 
