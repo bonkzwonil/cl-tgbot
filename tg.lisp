@@ -1,4 +1,5 @@
-(defpackage cl-tgbot 
+(defpackage cl-tgbot
+  (:nicknames tgbot)
   (:use :cl))
 
 (in-package :cl-tgbot)
@@ -6,16 +7,20 @@
 
 (defvar *api* "https://api.telegram.org/bot~a/~a")
 
-(defparameter *last-update-id* 0)
+(defvar  *token* "Please set this tot your telegram token")
 
+(defvar *last-update-id* 0)
+
+(defvar *long-poll-timeout* (* 60 5)) ;5 hours
 
 (setf drakma::*drakma-default-external-format* 'utf-8)
 (setf yason::*parse-object-as* :hash-table)
 
 ; Our little minilanguage for defining api
 (defmacro call-api (name &optional parameters content &body body)
-  `(yason:parse (drakma:http-request (build-url ,name ,parameters) :connection-timeout 1600 :method ,(if content :post :get) :content-type (if ,content "application/json" nil) :want-stream T :content ,content
-				     ,@body)))
+  `(if (null *token*) (error "No API Token set! Please set the variable *token* to your telegram bot token")
+       (yason:parse (drakma:http-request (build-url ,name ,parameters) :connection-timeout (+ *long-poll-timeout* 10) :method ,(if content :post :get) :content-type (if ,content "application/json" nil) :want-stream T :content ,content
+				     ,@body))))
 
 (defmacro defapi (call (json) &body body)
   `(defun ,call (&key parameters jsonbody)
