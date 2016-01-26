@@ -21,7 +21,8 @@
 
 
 (defun poll ()
-  (handle-updates (get-updates :parameters `( ("limit" . 5) ("offset" . ,*last-update-id*) ("timeout" . 1590))) #'handle-update))
+  (handler-case (handle-updates (get-updates :parameters `( ("limit" . 5) ("offset" . ,*last-update-id*) ("timeout" . 1590))) #'handle-update)
+    (condition (e) (format t "Unexpected condition: ~a" e))))
 
 
 
