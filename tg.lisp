@@ -63,8 +63,9 @@
 
 
 (defun send-message-via-api (chat-id text)
-  (format t "Sending ~a to ~a~%" text chat-id)
-  (send-message :jsonbody (format nil "{\"chat_id\": ~a, \"text\": \"~a\"}" chat-id text)))
+  (let ((text (cl-ppcre:regex-replace-all "\"" text "\\\"")))
+    (format t "Sending ~a to ~a~%" text chat-id)
+    (send-message :jsonbody (format nil "{\"chat_id\": ~a, \"text\": \"~a\"}" chat-id text))))
 
 
 
